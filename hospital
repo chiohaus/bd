@@ -1,0 +1,74 @@
+create database hospital;
+use hospital;
+
+create table paciente (
+nss int not null,
+cl int not null,
+nombre varchar(50) not null,
+apellidos varchar(50) not null,
+fecha_n date not null,
+primary key (nss, cl));
+
+Create table planta(
+num_planta int not null primary key,
+nombre varchar(20) not null,
+num_camas int not null);
+
+Create table medico (	
+codigo_m int not null primary key,
+nombre varchar(50) not null,
+apellidos varchar(50) not null);
+
+Create table cama (
+num_planta int not null,
+num_cama int not null,
+primary key (num_planta, num_cama),
+foreign key (num_planta) references planta (num_planta));
+
+Create table diagnostico (
+codigo_d int not null primary key,
+descripcion varchar(50) not null,
+fecha_d date not null,
+nss int not null,
+cl int not null,
+foreign key (nss, cl)			
+references paciente (nss, cl));
+			
+Create table tarjeta_visita (
+num_tarj int not null primary key,
+hora_ing time not null,
+hora_fnl time not null,
+nss int not null,
+cl int not null,
+foreign key (nss, cl)			
+references paciente (nss, cl));
+
+Create table paciente_cama(		
+nss int not null,
+cl int not null,
+num_planta int not null,
+num_cama int not null,
+fecha_asigna date not null,
+hora_asigna time not null,
+primary key (nss, cl, num_planta, num_cama),
+foreign key (nss,cl) references paciente (nss, cl),
+foreign key (num_planta, num_cama)
+references planta (num_planta, num_cama));
+
+
+Create table medico_diagnostico(
+codigo_m int not null,
+codigo_d int not null,
+primary key (codigo_m, codigo_d),
+foreign key (codigo_m) references medico (codigo_m),
+foreign key (codigo_D) references diagnostico (codigo_d));		
+
+Create table paciente_medico(
+nss int not null,
+cl int not null,
+codigo_m int not null,			
+fecha_atiende date not null,
+hora_atiende time not null,
+primary key (nss, cl, codigo_m),
+foreign key (nss, cl) references paciente (nss, cl),
+foreign key (codigo_m) references medico (codigo_m));	
